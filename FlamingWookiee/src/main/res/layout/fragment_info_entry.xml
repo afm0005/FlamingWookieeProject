@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:gravity="center_horizontal" >
+
+    <EditText android:id="@+id/id_number"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="24dp"
+              android:layout_marginRight="24dp"
+              android:hint="ID number"/>
+
+    <EditText android:id="@+id/username"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="24dp"
+              android:layout_marginRight="24dp"
+              android:hint="Username"/>
+
+    <EditText android:id="@+id/pin_number"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="24dp"
+              android:layout_marginRight="24dp"
+              android:hint="Pin number"/>
+
+</LinearLayout>
