@@ -1,6 +1,6 @@
 package com.android.flamingwookiee;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,16 +38,6 @@ public class QuizFinderFragment extends Fragment {
                 mURLField.getText();
                 //SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
                 //mPref.edit().putString("url", mURLField.getText().toString());
-            }
-        });
-
-        mChangeInfoButton = (Button)v.findViewById(R.id.change_info_button);
-        mChangeInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity().getFragmentManager();
-                InfoDialogFragment dialog = new InfoDialogFragment();
-                dialog.show(fm, DIALOG_USERNAME);
             }
         });
         return v;

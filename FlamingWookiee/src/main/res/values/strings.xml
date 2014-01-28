@@ -8,5 +8,10 @@
     <string name="change_info_button_text">Change Info</string>
     <string name="info_entry_title">Student Information</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="username_field_text">Username:</string>
+    <string name="id_field_text">ID Number:</string>
+    <string name="pin_field_text">Pin Number:</string>
+    <string name="info_saved_toast">Info Saved</string>
 
 </resources>
