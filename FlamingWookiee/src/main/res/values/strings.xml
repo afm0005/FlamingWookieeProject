@@ -13,5 +13,7 @@
     <string name="id_field_text">ID Number:</string>
     <string name="pin_field_text">Pin Number:</string>
     <string name="info_saved_toast">Info Saved</string>
+    <string name="title_activity_quiz">QuizActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -6,7 +6,8 @@
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="19"/>
+        android:targetSdkVersion="19" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -32,6 +33,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.android.flamingwookiee.QuizActivity"
+            android:label="@string/title_activity_quiz" >
         </activity>
     </application>
 

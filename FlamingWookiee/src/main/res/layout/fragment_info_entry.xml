@@ -1,63 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center"
-              android:gravity="center_horizontal" >
-    <LinearLayout
-        android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/id_number"
+        android:inputType="number"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:text="@string/id_field_text"/>
-
-        <EditText android:id="@+id/id_number"
-                  android:layout_height="wrap_content"
-                  android:layout_width="match_parent"
-                  android:layout_marginLeft="24dp"
-                  android:layout_marginRight="24dp"/>
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="sans-serif"
+        android:hint="@string/id_field_text" />
 
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:text="@string/username_field_text"/>
-
-        <EditText android:id="@+id/username"
-                  android:layout_height="wrap_content"
-                  android:layout_width="match_parent"
-                  android:layout_marginLeft="24dp"
-                  android:layout_marginRight="24dp"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/pin_number"
+        android:inputType="number"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:hint="@string/pin_field_text"/>
 
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:text="@string/pin_field_text"/>
-
-        <EditText android:id="@+id/pin_number"
-                  android:layout_height="wrap_content"
-                  android:layout_width="match_parent"
-                  android:layout_marginLeft="24dp"
-                  android:layout_marginRight="24dp"/>
-    </LinearLayout>
-    <Button
-        android:id="@+id/save_info_button"
+    <EditText
+        android:id="@+id/username"
+        android:inputType="textPersonName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Save"/>
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:hint="@string/username_field_text"/>
+
 
 </LinearLayout>

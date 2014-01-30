@@ -2,80 +2,93 @@ package com.android.flamingwookiee;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.support.v4.app.Fragment;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * Created by Andrew on 1/18/14.
  */
-public class InfoEntryFragment extends Fragment {
+public class InfoEntryFragment extends DialogFragment {
     private EditText mIDNumberField;
     private EditText mUsernameField;
     private EditText mPinNumberField;
-    private Button mSaveButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_info_entry, container, false);
+        View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_info_entry, null);
         SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
         mIDNumberField = (EditText)v.findViewById(R.id.id_number);
-        mIDNumberField.setText(Integer.toString(mPref.getInt("id_field", 123456789)));
         mUsernameField = (EditText)v.findViewById(R.id.username);
-        mUsernameField.setText(mPref.getString("username_field", "e.g. afm0005"));
         mPinNumberField = (EditText)v.findViewById(R.id.pin_number);
-        mPinNumberField.setText(Integer.toString(mPref.getInt("pin_field", 1234)));
-        mSaveButton = (Button)v.findViewById(R.id.save_info_button);
 
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (attemptRegister()) {
-                    SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
-                    mPref.edit().putInt("id_field",Integer.parseInt(mIDNumberField.getText().toString())).apply();
-                    mPref.edit().putInt("pin_field", Integer.parseInt(mPinNumberField.getText().toString())).apply();
-                    mPref.edit().putString("username_field", mUsernameField.getText().toString()).apply();
-                    Toast.makeText(getActivity(), R.string.info_saved_toast, Toast.LENGTH_SHORT).show();
+        if (mPref.contains("id_field")
+                && mPref.contains("username_field")
+                && mPref.contains("pin_field")) {
+            //populate fields with data
+            mIDNumberField.setText(Integer.toString(mPref.getInt("id_field", 123456789)));
+            mUsernameField.setText(mPref.getString("username_field", "John Doe"));
+            mPinNumberField.setText(Integer.toString(mPref.getInt("pin_field", 1234)));
+        }
+
+        builder.setTitle("Enter Info")
+            .setView(v)
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    attemptRegister();
                 }
-            }
-        });
-        return v;
+            });
+
+        return builder.create();
     }
 
+
+    //TODO this is awkward, because it'll leave dialog... don't let that happen
     public boolean attemptRegister() {
-        boolean allFieldsEntered = true;
-        if(TextUtils.isEmpty(mIDNumberField.getText())) {
+        mIDNumberField.setError(null);
+        mPinNumberField.setError(null);
+        mUsernameField.setError(null);
+
+        String mID = mIDNumberField.getText().toString();
+        String mPIN = mPinNumberField.getText().toString();
+        String mName = mUsernameField.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if(TextUtils.isEmpty(mID)) {
             mIDNumberField.setError("ID Number Required");
-            allFieldsEntered = false;
-        }
+            focusView = mIDNumberField;
+            cancel = true;
+        } //TODO make sure int
 
-        if(TextUtils.isEmpty(mPinNumberField.getText())) {
-            mPinNumberField.setError("Pin Number Required");
-            allFieldsEntered = false;
-        }
-        else if (mPinNumberField.length() != 4) {
-            mPinNumberField.setError("Pin Number must be four digits");
-            allFieldsEntered = false;
-        }
+        if (mPIN.length() != 4) {
+            mPinNumberField.setError("4 Digit PIN required");
+            focusView = mPinNumberField;
+            cancel = true;
+        } //TODO make sure int
 
-        if(TextUtils.isEmpty(mUsernameField.getText())) {
+        if (TextUtils.isEmpty(mName)) {
             mUsernameField.setError("Username Required");
-            allFieldsEntered = false;
+            focusView = mUsernameField;
+            cancel = true;
         }
-        return allFieldsEntered;
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
+            mPref.edit().putInt("id_field",Integer.parseInt(mIDNumberField.getText().toString())).apply();
+            mPref.edit().putInt("pin_field", Integer.parseInt(mPinNumberField.getText().toString())).apply();
+            mPref.edit().putString("username_field", mUsernameField.getText().toString()).apply();
+        }
+        return !cancel;
     }
 }
