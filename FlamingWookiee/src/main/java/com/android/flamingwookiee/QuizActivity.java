@@ -2,9 +2,9 @@ package com.android.flamingwookiee;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import retrofit.Callback;
@@ -12,8 +12,6 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
@@ -28,16 +26,27 @@ public class QuizActivity extends Activity
         boolean Success;
     }
 
+    public class Answer {
+        String Id;
+        int Answer;
+
+        public Answer(int a, String id) {
+            Answer = a;
+            Id = id;
+        }
+    }
+
+
     public interface WookieService {
-        @FormUrlEncoded
         @PUT("/quiz/{id}/answer")
-        void answer(@Path("id") int id, @Field("answer") int answer, Callback<Result> cb);
+        void answer(@Path("id") int id, @Body Answer answer, Callback<Result> cb);
     }
 
     int qid;
     //TODO go buy a server already
     String host;
     WookieService wookie;
+    String mId;
 
 
     @Override
@@ -50,6 +59,12 @@ public class QuizActivity extends Activity
             Bundle b = getIntent().getExtras();
             host = b.getString("host");
             qid = b.getInt("qid");
+
+            SharedPreferences sp = getSharedPreferences("info", MODE_PRIVATE);
+            String mId = sp.getString("id_field", "");
+            String mPin = sp.getString("pin_field", "");
+            //TODO security opportunities here
+            this.mId = mId + mPin;
 
             RestAdapter ra = new RestAdapter.Builder()
                     .setServer("http://"+host) //dicey
@@ -81,7 +96,8 @@ public class QuizActivity extends Activity
     }
 
     public void onAnswerSelected(final int offset) {
-        wookie.answer(qid, offset, new Callback<Result>() {
+        Answer ans = new Answer(offset, mId);
+        wookie.answer(qid, ans, new Callback<Result>() {
             @Override
             public void failure(final RetrofitError error) {
                 //TODO show error?

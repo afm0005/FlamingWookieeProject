@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 /**
@@ -39,8 +38,8 @@ public class InfoEntryFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
-                mPref.edit().putInt("id_field",Integer.parseInt(mIDNumberField.getText().toString())).apply();
-                mPref.edit().putInt("pin_field", Integer.parseInt(mPinNumberField.getText().toString())).apply();
+                mPref.edit().putString("id_field", mIDNumberField.getText().toString()).apply();
+                mPref.edit().putString("pin_field", mPinNumberField.getText().toString()).apply();
                 mPref.edit().putString("username_field", mUsernameField.getText().toString()).apply();
 
             }
@@ -51,9 +50,9 @@ public class InfoEntryFragment extends DialogFragment {
                 && mPref.contains("username_field")
                 && mPref.contains("pin_field")) {
             //populate fields with data
-            mIDNumberField.setText(Integer.toString(mPref.getInt("id_field", 123456789)));
+            mIDNumberField.setText(mPref.getString("id_field", ""));
             mUsernameField.setText(mPref.getString("username_field", "John Doe"));
-            mPinNumberField.setText(Integer.toString(mPref.getInt("pin_field", 1234)));
+            mPinNumberField.setText(mPref.getString("pin_field", ""));
         }
 
         mUsernameField.setError(null);
