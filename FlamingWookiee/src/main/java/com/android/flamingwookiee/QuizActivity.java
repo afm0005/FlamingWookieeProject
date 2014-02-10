@@ -5,7 +5,14 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -102,11 +109,34 @@ public class QuizActivity extends Activity
             @Override
             public void failure(final RetrofitError error) {
                 //TODO show error?
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.failure_toast,
+                        (ViewGroup)findViewById(R.id.failure_toast_layout));
+                TextView text = (TextView)layout.findViewById(R.id.failure_text);
+                text.setText("Error: Answer Not Received");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.BOTTOM, 0, 0);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
+                toast.show();
                 Log.e("retrofit error", error.toString());
             }
             @Override
             public void success(Result r, Response resp) {
                 //TODO show success?
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.success_toast,
+                        (ViewGroup)findViewById(R.id.succes_toast_layout));
+                TextView text = (TextView)layout.findViewById(R.id.success_text);
+                text.setText("Success: Answer Received");
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.BOTTOM, 0, 0);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
+                toast.show();
+
                 Log.e("yay", "great success");
             }
         });

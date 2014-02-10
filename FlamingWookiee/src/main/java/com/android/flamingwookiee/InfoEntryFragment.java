@@ -46,6 +46,7 @@ public class InfoEntryFragment extends DialogFragment {
         });
         final AlertDialog alert = builder.create();
         alert.show();
+        alert.setCanceledOnTouchOutside(false);
         if (mPref.contains("id_field")
                 && mPref.contains("username_field")
                 && mPref.contains("pin_field")) {
