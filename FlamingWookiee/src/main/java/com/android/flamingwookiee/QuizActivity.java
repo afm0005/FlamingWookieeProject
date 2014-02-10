@@ -56,6 +56,7 @@ public class QuizActivity extends Activity
 
         //TODO remember how savedInstanceState works?
         if (savedInstanceState == null) {
+            getActionBar().setTitle("Quiz");
             Bundle b = getIntent().getExtras();
             host = b.getString("host");
             qid = b.getInt("qid");

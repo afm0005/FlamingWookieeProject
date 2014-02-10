@@ -21,6 +21,7 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getActionBar().setTitle("Quiz Finder");
         Button submit = (Button) findViewById(R.id.send_url_button);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
