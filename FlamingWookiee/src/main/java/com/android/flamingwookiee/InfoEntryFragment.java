@@ -61,22 +61,27 @@ public class InfoEntryFragment extends DialogFragment {
         mIDNumberField.setError(null);
 
 
-
+        /*
         String mID = mIDNumberField.getText().toString();
         String mName = mUsernameField.getText().toString();
         String mPIN = mPinNumberField.getText().toString();
 
         if (TextUtils.isEmpty(mID)) {
-            mIDNumberField.setError("ID Number Required");
+            //mIDNumberField.setError("ID Number Required");
             alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
         if (TextUtils.isEmpty(mName)) {
-            mUsernameField.setError("Username Required");
+            //mUsernameField.setError("Username Required");
             alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
         if(TextUtils.isEmpty(mPIN)) {
-            mPinNumberField.setError("4 digit PIN Required");
+            //mPinNumberField.setError("4 digit PIN Required");
             alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        }
+        */
+
+        if (isValidInfo()) {
+            alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         }
 
 
@@ -85,7 +90,9 @@ public class InfoEntryFragment extends DialogFragment {
         mIDNumberField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
+                if (!isValidInfo()) {
+                    alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                }
             }
 
             @Override
@@ -95,9 +102,16 @@ public class InfoEntryFragment extends DialogFragment {
                     mIDNumberField.setError("ID Number Required");
                     alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
                 } else { //clear error and check if other fields have errors.
+                    /*
                     mIDNumberField.setError(null);
                     if(mUsernameField.getError() == null && mPinNumberField.getError() == null)
                     alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                    */
+                    mIDNumberField.setError(null);
+                    if(isValidInfo()) {
+                        alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                    }
+
                 }
             }
 
@@ -110,7 +124,9 @@ public class InfoEntryFragment extends DialogFragment {
         mUsernameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
+                if (!isValidInfo()) {
+                    alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                }
             }
 
             @Override
@@ -136,7 +152,9 @@ public class InfoEntryFragment extends DialogFragment {
         mPinNumberField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
+                if (!isValidInfo()) {
+                    alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                }
             }
 
             @Override
@@ -162,4 +180,22 @@ public class InfoEntryFragment extends DialogFragment {
         return alert;
 
     }
+
+    private boolean isValidInfo() {
+
+        String mID = mIDNumberField.getText().toString();
+        String mName = mUsernameField.getText().toString();
+        String mPIN = mPinNumberField.getText().toString();
+
+        if(((mPinNumberField.getError() == null) || (!TextUtils.isEmpty(mPIN)))
+                &&((mUsernameField.getError() == null) || (!TextUtils.isEmpty(mName)))
+                &&(mIDNumberField.getError() == null) || (!TextUtils.isEmpty(mID))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
 }
