@@ -70,9 +70,8 @@ public class QuizActivity extends Activity
 
             SharedPreferences sp = getSharedPreferences("info", MODE_PRIVATE);
             String mId = sp.getString("id_field", "");
-            String mPin = sp.getString("pin_field", "");
             //TODO security opportunities here
-            this.mId = mId + mPin;
+            this.mId = mId;
 
             RestAdapter ra = new RestAdapter.Builder()
                     .setServer("http://"+host) //dicey

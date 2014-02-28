@@ -19,7 +19,6 @@ import android.widget.EditText;
 public class InfoEntryFragment extends DialogFragment {
     private EditText mIDNumberField;
     private EditText mUsernameField;
-    private EditText mPinNumberField;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -27,9 +26,8 @@ public class InfoEntryFragment extends DialogFragment {
 
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_info_entry, null);
         SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
-        mIDNumberField = (EditText)v.findViewById(R.id.id_number);
+        mIDNumberField = (EditText)v.findViewById(R.id.id);
         mUsernameField = (EditText)v.findViewById(R.id.username);
-        mPinNumberField = (EditText)v.findViewById(R.id.pin_number);
 
 
         builder.setTitle("Enter Info");
@@ -39,7 +37,6 @@ public class InfoEntryFragment extends DialogFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 SharedPreferences mPref = getActivity().getSharedPreferences("info", Context.MODE_PRIVATE);
                 mPref.edit().putString("id_field", mIDNumberField.getText().toString()).apply();
-                mPref.edit().putString("pin_field", mPinNumberField.getText().toString()).apply();
                 mPref.edit().putString("username_field", mUsernameField.getText().toString()).apply();
 
             }
@@ -48,23 +45,19 @@ public class InfoEntryFragment extends DialogFragment {
         alert.show();
         alert.setCanceledOnTouchOutside(false);
         if (mPref.contains("id_field")
-                && mPref.contains("username_field")
-                && mPref.contains("pin_field")) {
+                && mPref.contains("username_field")) {
             //populate fields with data
             mIDNumberField.setText(mPref.getString("id_field", ""));
             mUsernameField.setText(mPref.getString("username_field", "John Doe"));
-            mPinNumberField.setText(mPref.getString("pin_field", ""));
         }
 
         mUsernameField.setError(null);
-        mPinNumberField.setError(null);
         mIDNumberField.setError(null);
 
 
 
         String mID = mIDNumberField.getText().toString();
         String mName = mUsernameField.getText().toString();
-        String mPIN = mPinNumberField.getText().toString();
 
         if (TextUtils.isEmpty(mID)) {
             mIDNumberField.setError("ID Number Required");
@@ -74,12 +67,6 @@ public class InfoEntryFragment extends DialogFragment {
             mUsernameField.setError("Username Required");
             alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
-        if(TextUtils.isEmpty(mPIN)) {
-            mPinNumberField.setError("4 digit PIN Required");
-            alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-        }
-
-
 
 
         mIDNumberField.addTextChangedListener(new TextWatcher() {
@@ -96,7 +83,7 @@ public class InfoEntryFragment extends DialogFragment {
                     alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
                 } else { //clear error and check if other fields have errors.
                     mIDNumberField.setError(null);
-                    if(mUsernameField.getError() == null && mPinNumberField.getError() == null)
+                    if(mUsernameField.getError() == null)
                     alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
                 }
             }
@@ -122,35 +109,9 @@ public class InfoEntryFragment extends DialogFragment {
                 }
                 else {
                     mUsernameField.setError(null);
-                    if(mPinNumberField.getError() == null && mIDNumberField.getError() == null)
+                    if(mIDNumberField.getError() == null)
                         alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        mPinNumberField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                String mPIN = mPinNumberField.getText().toString();
-                    if (mPIN.length() != 4) {
-                        mPinNumberField.setError("4 Digit PIN required");
-                        alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-                    }
-                    else {
-                        mPinNumberField.setError(null);
-                        if(mUsernameField.getError() == null && mIDNumberField.getError() == null)
-                            alert.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-                    }
             }
 
             @Override
