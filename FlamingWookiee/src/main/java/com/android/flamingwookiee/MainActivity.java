@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,14 +39,22 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 
 public class MainActivity extends Activity
-        implements QuestionFragment.OnAnswerSelectedListener{
+        implements QuestionFragment.OnAnswerSelectedListener,
+        EnterUserInfoDialogFragment.EnterUserInfoDialogListener,
+        AddClassDialogFragment.AddClassDialogListener {
 
-    private Class currClass;
+    private Class mCurrClass;
+    private ArrayList<Class> mClassList;
+    private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private SharedPreferences settings;
 
-    //right now mostly irrelevant and I believe throwing an error
-    //retrofit just needs something...
-    //eventually, we should let the user know whether request was successful or not, though
+    //Test classes
+    Class class1 = new Class("Comp 1000", "1111");
+    Class class2 = new Class("Phil 1100", "5555");
+    Class class3 = new Class("Math 3240", "3333");
+
+
     public class Result {
         boolean Success;
     }
@@ -55,35 +69,29 @@ public class MainActivity extends Activity
         }
     }
 
-    public class Class {
-        String classID;
-        String studentID;
-        String className;
-    }
+//    public class ClassAdapter extends ArrayAdapter<Class> {
+//
+//        ArrayList<Class> mClasses;
+//        Context context;
+//
+//        public ClassAdapter(ArrayList<Class> classes) {
+//            super(, 0, classes);
+//            mClasses = classes;
+//            this.context = context;
+//
+//        }
 
-    public class ClassAdapter extends ArrayAdapter<Class> {
-
-        ArrayList<Class> mClasses;
-        Context context;
-
-        public ClassAdapter(Context context, ArrayList<Class> classes) {
-            super(context,android.R.layout.simple_list_item_1, classes);
-            mClasses = classes;
-            this.context = context;
-
-        }
-
-        @Override
-        public View getView(final int position, View view, ViewGroup parent) {
-
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-
-            TextView text = (TextView)v.findViewById(android.R.id.text1);
-            text.setText(mClasses.get(position).className);
-            return v;
-        }
-    }
+//        @Override
+//        public View getView(final int position, View view, ViewGroup parent) {
+//
+//            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+//
+//            TextView text = (TextView)v.findViewById(android.R.id.text1);
+//            text.setText(mClasses.get(position).className);
+//            return v;
+//        }
+//    }
 
 
     public interface WookieService {
@@ -103,70 +111,62 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Class class1 = new Class();
-        class1.className = "my Class";
-
-        ArrayList<Class> list = new ArrayList<Class>();
-        list.add(class1);
+        mClassList = ClassList.get(this).getClasses();
 
 
-        getActionBar().setTitle("Quiz Finder");
-//        //Button submit = (Button) findViewById(R.id.send_url_button);
-//        //submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                launchQuiz();
-//            }
-//        });
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        Fragment qf = new SplashFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, qf)
-                .commit();
+        // set up the drawer's list view with items and click listener
+        mDrawerList.setAdapter(new ArrayAdapter<Class>(this,
+                R.layout.drawer_list_item, mClassList));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
-        mDrawerList.setAdapter(new ClassAdapter(this, list));
-        // Set the list's click listener
-        //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        if (savedInstanceState == null) {
+            Fragment fragment = new SplashFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+        }
     }
 
-    //public void launchQuiz() {
-        // http://localhost:8080/quiz/1234
-        //EditText urlBox = (EditText) findViewById(R.id.url);
-//        urlBox.setError(null);
-//
-//        try {
-//            URL url = new URL(urlBox.getText().toString());
-//            Intent intent = new Intent(this, QuizActivity.class);
-//            //TODO get rid of host and port issues
-//            if (url.getPort() == -1) {
-//                throw new MalformedURLException("bad");
-//            }
-//            intent.putExtra("host", url.getHost()+":"+url.getPort());
-//            if (url.getPath().length() < 6) {
-//                throw new MalformedURLException("bad");
-//            }
-//            intent.putExtra("qid", Integer.parseInt(url.getPath().substring(6)));
-//            startActivity(intent);
-//        } catch (MalformedURLException e) {
-//            //TODO better error checking...
-//            urlBox.setError("Bad URL, try again");
-//            urlBox.requestFocus();
-//        }
-//
-//    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!getSharedPreferences("info", MODE_PRIVATE).contains("pin_field")) {
+        if (!getSharedPreferences("userInfo", MODE_PRIVATE).contains("username")) {
             showSettings();
         }
     }
 
     public void showSettings() {
-        DialogFragment newFragment = new InfoEntryFragment();
-        newFragment.show(getFragmentManager(), null);
+        DialogFragment dialog = new EnterUserInfoDialogFragment();
+        dialog.show(getFragmentManager(), "EnterUserInfoDialogFragment");
+    }
+
+    // Enter username positive click event callback
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        /* I want the splashFragment to update its view here to show
+         * the new username.
+         * This works but isn't ideal, if I change username from a
+         * class page it comes back to home page.
+         */
+        Fragment fragment = new SplashFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+    }
+
+    // Add class positive click event callback
+    @Override
+    public void onAddClassDialogPositiveClick(DialogFragment dialog) {
+        mDrawerList.setAdapter(new ArrayAdapter<Class>(this,
+                R.layout.drawer_list_item, mClassList));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
     @Override
@@ -226,6 +226,38 @@ public class MainActivity extends Activity
                 Log.e("yay", "great success");
             }
         });
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        //Create new fragment and specify the class to show based on position
+        Fragment fragment = new ClassFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ClassFragment.ARG_ID, mClassList.get(position).getId());
+        fragment.setArguments(args);
+
+        //Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+        //Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        //setTitle(mClassList.get(position));
+        mDrawerLayout.closeDrawer(mDrawerList);
+
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        getActionBar().setTitle(title);
     }
 
 }
