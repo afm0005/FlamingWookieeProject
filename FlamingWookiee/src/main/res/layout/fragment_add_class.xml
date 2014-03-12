@@ -9,6 +9,11 @@
         android:id="@+id/class_hash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/class_hash_hint"/>
+        android:hint="Enter class here..."/>
+    <EditText
+        android:id="@+id/student_hash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter student here..."/>
 
 </LinearLayout>

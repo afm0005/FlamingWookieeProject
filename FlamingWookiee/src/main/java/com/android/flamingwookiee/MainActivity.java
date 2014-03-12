@@ -38,10 +38,11 @@ import retrofit.http.Body;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-public class MainActivity extends Activity
-        implements QuestionFragment.OnAnswerSelectedListener,
+public class MainActivity extends Activity implements
         EnterUserInfoDialogFragment.EnterUserInfoDialogListener,
         AddClassDialogFragment.AddClassDialogListener {
+
+    public final static String EXTRA_CLASS_ID = "com.android.flamingwookiee.CLASS_ID";
 
     private Class mCurrClass;
     private ArrayList<Class> mClassList;
@@ -50,9 +51,9 @@ public class MainActivity extends Activity
     private SharedPreferences settings;
 
     //Test classes
-    Class class1 = new Class("Comp 1000", "1111");
-    Class class2 = new Class("Phil 1100", "5555");
-    Class class3 = new Class("Math 3240", "3333");
+    //Class class1 = new Class("Comp 1000", "1111");
+    //Class class2 = new Class("Phil 1100", "5555");
+    //Class class3 = new Class("Math 3240", "3333");
 
 
     public class Result {
@@ -152,6 +153,7 @@ public class MainActivity extends Activity
          * the new username.
          * This works but isn't ideal, if I change username from a
          * class page it comes back to home page.
+         * ***POSSIBLY IRRELEVANT NOW****
          */
         Fragment fragment = new SplashFragment();
         FragmentManager fragmentManager = getFragmentManager();

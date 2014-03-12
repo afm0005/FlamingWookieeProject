@@ -27,12 +27,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="5dp"
             android:textSize="30sp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:id="@+id/class_title_text"/>
+
+        <TextView
+            android:id="@+id/student_id_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textSize="20sp"
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -43,7 +50,7 @@
         android:layout_gravity="center_vertical">
 
         <Button
-            android:id="@+id/take_quiz"
+            android:id="@+id/start_quiz_button"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="wrap_content"

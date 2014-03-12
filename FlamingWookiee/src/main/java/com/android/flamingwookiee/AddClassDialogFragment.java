@@ -28,6 +28,7 @@ public class AddClassDialogFragment extends DialogFragment {
     private AddClassDialogListener mListener;
 
     private EditText mClassHash;
+    private EditText mStudentHash;
 
     @Override
     public void onAttach(Activity activity) {
@@ -50,6 +51,7 @@ public class AddClassDialogFragment extends DialogFragment {
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_class, null);
 
         mClassHash = (EditText) v.findViewById(R.id.class_hash);
+        mStudentHash = (EditText) v.findViewById(R.id.student_hash);
 
         builder.setTitle("Add Class");
         builder.setView(v);
@@ -62,7 +64,8 @@ public class AddClassDialogFragment extends DialogFragment {
                 Also maybe send this event back to main activity.
                  */
 
-                Class newClass = new Class(mClassHash.getText().toString(), "1234");
+                Class newClass = new Class(mClassHash.getText().toString(), "1234"
+                        ,mStudentHash.getText().toString());
                 ClassList.get(getActivity()).addClass(newClass);
 
                 mListener.onAddClassDialogPositiveClick(AddClassDialogFragment.this);

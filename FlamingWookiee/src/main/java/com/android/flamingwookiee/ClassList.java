@@ -20,9 +20,9 @@ public class ClassList {
 
 
     //test data
-    Class class1 = new Class("Comp 1000", "1111");
-    Class class2 = new Class("Phil 1100", "5555");
-    Class class3 = new Class("Math 3240", "3333");
+    //Class class1 = new Class("Comp 1000", "1111");
+    //Class class2 = new Class("Phil 1100", "5555");
+    //Class class3 = new Class("Math 3240", "3333");
 
     private ClassList(Context appContext) {
         mAppContext = appContext;
@@ -71,7 +71,7 @@ public class ClassList {
             //show success toast
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "Error saveing classes: ", e);
+            Log.e(TAG, "Error saving classes: ", e);
             //show failure toast
             return false;
         }

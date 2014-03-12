@@ -2,6 +2,7 @@ package com.android.flamingwookiee;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -26,7 +27,9 @@ public class ClassFragment extends Fragment{
 
     private TextView mCurrentUser;
     private TextView mClassTitle;
+    private TextView mStudentId;
     private Button mHomeButton;
+    private Button mStartQuizButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +41,15 @@ public class ClassFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup parent,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_class, parent, false);
-        UUID id = (UUID) getArguments().getSerializable(ARG_ID);
+        final UUID id = (UUID) getArguments().getSerializable(ARG_ID);
 
-        TextView mClassTitle = (TextView)v.findViewById(R.id.class_title_text);
-        mClassTitle.setText(ClassList.get(getActivity()).getClass(id).toString());
+        mClassTitle = (TextView)v.findViewById(R.id.class_title_text);
+        mClassTitle.setText(ClassList.get(getActivity()).getClass(id).getTitle());
 
-        TextView mCurrentUser = (TextView) v.findViewById((R.id.current_user));
+        mStudentId = (TextView) v.findViewById(R.id.student_id_text);
+        mStudentId.setText(ClassList.get(getActivity()).getClass(id).getStudentId());
+
+        mCurrentUser = (TextView) v.findViewById((R.id.current_user));
         SharedPreferences mPref = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         mCurrentUser.setText(mPref.getString("username", "No username found"));
 
@@ -58,6 +64,17 @@ public class ClassFragment extends Fragment{
                         .commit();
             }
         });
+
+        mStartQuizButton = (Button) v.findViewById(R.id.start_quiz_button);
+        mStartQuizButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent startQuizIntent = new Intent(getActivity(), QuizActivity.class);
+                startQuizIntent.putExtra(MainActivity.EXTRA_CLASS_ID, ClassList.get(getActivity()).getClass(id).getClassId());
+                startActivity(startQuizIntent);
+            }
+        });
+
 
         return v;
     }

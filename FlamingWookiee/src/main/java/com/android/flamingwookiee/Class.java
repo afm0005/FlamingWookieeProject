@@ -12,25 +12,30 @@ public class Class {
     private static final String JSON_TITLE = "title";
     private static final String JSON_CLASS_ID = "class_id";
     private static final String JSON_ID = "id";
+    private static final String JSON_STUDENT_ID = "student_id";
 
     private String mTitle;
     private String mClassId;
+    private String mStudentId;
     private UUID mId;
 
     public Class() {
-        mTitle = "Default_Class";
-        mClassId = "Default_ID";
+        mTitle = "Default class title";
+        mClassId = "Default class id";
+        mStudentId = "Default student id";
     }
 
-    public Class(String title, String ID) {
+    public Class(String title, String cId, String sId) {
         mTitle = title;
-        mClassId = ID;
+        mClassId = cId;
+        mStudentId = sId;
         mId = UUID.randomUUID();
     }
 
     public Class(JSONObject json) throws JSONException {
         mTitle = json.getString(JSON_TITLE);
         mClassId = json.getString(JSON_CLASS_ID);
+        mStudentId = json.getString(JSON_STUDENT_ID);
         mId = UUID.fromString(json.getString(JSON_ID));
     }
 
@@ -50,6 +55,14 @@ public class Class {
         mClassId = ID;
     }
 
+    public String getStudentId() {
+        return mStudentId;
+    }
+
+    public void setStudentId(String studentId) {
+        mStudentId = studentId;
+    }
+
     public UUID getId() {
         return mId;
     }
@@ -58,12 +71,13 @@ public class Class {
         JSONObject json = new JSONObject();
         json.put(JSON_TITLE, mTitle);
         json.put(JSON_CLASS_ID, mClassId);
+        json.put(JSON_STUDENT_ID, mStudentId);
         json.put(JSON_ID, mId.toString());
         return json;
     }
 
     @Override
     public String toString() {
-        return mTitle;
+        return mTitle + "\n" + mStudentId;
     }
 }
