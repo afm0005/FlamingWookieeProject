@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,11 +31,18 @@ import android.widget.Toast;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
+
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
@@ -42,18 +50,17 @@ public class MainActivity extends Activity implements
         EnterUserInfoDialogFragment.EnterUserInfoDialogListener,
         AddClassDialogFragment.AddClassDialogListener {
 
+
+    static final String TAG = "de.tavendo.autobahn.echo";
     public final static String EXTRA_CLASS_ID = "com.android.flamingwookiee.CLASS_ID";
+    private static final String WOOKIEE_URL = "absker.com:5432";
 
     private Class mCurrClass;
     private ArrayList<Class> mClassList;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private SharedPreferences settings;
-
-    //Test classes
-    //Class class1 = new Class("Comp 1000", "1111");
-    //Class class2 = new Class("Phil 1100", "5555");
-    //Class class3 = new Class("Math 3240", "3333");
+    static Button mStart;
 
 
     public class Result {
@@ -70,34 +77,17 @@ public class MainActivity extends Activity implements
         }
     }
 
-//    public class ClassAdapter extends ArrayAdapter<Class> {
-//
-//        ArrayList<Class> mClasses;
-//        Context context;
-//
-//        public ClassAdapter(ArrayList<Class> classes) {
-//            super(, 0, classes);
-//            mClasses = classes;
-//            this.context = context;
-//
-//        }
 
-//        @Override
-//        public View getView(final int position, View view, ViewGroup parent) {
-//
-//            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-//
-//            TextView text = (TextView)v.findViewById(android.R.id.text1);
-//            text.setText(mClasses.get(position).className);
-//            return v;
-//        }
-//    }
-
+    static class User {
+        String name;
+    }
 
     public interface WookieService {
         @PUT("/quiz/{id}/answer")
         void answer(@Path("id") int id, @Body Answer answer, Callback<Result> cb);
+        @GET("/users")
+        List<User> users();
+
     }
 
     int qid;
@@ -107,10 +97,27 @@ public class MainActivity extends Activity implements
     String mId;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //LAUNCHED FROM BROWSER LINK
+        //gets the parameters and adds the class
+        if (getIntent().getAction().equals("android.intent.action.VIEW")) {
+            Uri data = getIntent().getData();
+            String scheme = data.getScheme(); //http
+            String host = data.getHost(); //twitter.com
+            List<String> params = data.getPathSegments();
+            String classId = params.get(0);
+            String studentId = params.get(1);
+
+            Class newClass = new Class(classId, "1234"
+                    , studentId);
+            ClassList.get(this).addClass(newClass);
+        }
 
         mClassList = ClassList.get(this).getClasses();
 
@@ -189,45 +196,6 @@ public class MainActivity extends Activity implements
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onAnswerSelected(final int offset) {
-        Answer ans = new Answer(offset, mId);
-        wookie.answer(qid, ans, new Callback<Result>() {
-            @Override
-            public void failure(final RetrofitError error) {
-                //TODO show error?
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.failure_toast,
-                        (ViewGroup)findViewById(R.id.failure_toast_layout));
-                TextView text = (TextView)layout.findViewById(R.id.failure_text);
-                text.setText("Error: Answer Not Received");
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setDuration(Toast.LENGTH_SHORT);
-                toast.setView(layout);
-                toast.show();
-                Log.e("retrofit error", error.toString());
-            }
-            @Override
-            public void success(Result r, Response resp) {
-                //TODO show success?
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.success_toast,
-                        (ViewGroup)findViewById(R.id.succes_toast_layout));
-                TextView text = (TextView)layout.findViewById(R.id.success_text);
-                text.setText("Success: Answer Received");
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setDuration(Toast.LENGTH_SHORT);
-                toast.setView(layout);
-                toast.show();
-
-                Log.e("yay", "great success");
-            }
-        });
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

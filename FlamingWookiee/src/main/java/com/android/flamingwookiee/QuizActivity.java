@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -24,19 +31,21 @@ import retrofit.http.Body;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-public class QuizActivity extends Activity {
+public class QuizActivity extends Activity implements QuestionFragment.OnAnswerSelectedListener {
 
 
     //right now mostly irrelevant and I believe throwing an error
     //retrofit just needs something...
     //eventually, we should let the user know whether request was successful or not, though
 
-    private static final String TAG = "QuizActivity";
 
 
     private Question mQuestion;
+    private final WebSocketConnection mConnection = new WebSocketConnection();
+    static final String TAG = "de.tavendo.autobahn.echo";
 
-    /*
+
+
     public class Result {
         boolean Success;
     }
@@ -50,33 +59,67 @@ public class QuizActivity extends Activity {
             Id = id;
         }
     }
-    */
 
 
-    /*
+
+
     public interface WookieService {
-        //@PUT("/quiz/{id}/answer")
-        //void answer(@Path("id") int id, @Body Answer answer, Callback<Result> cb);
+        @PUT("/quiz/{id}/answer")
+        void answer(@Path("id") int id, @Body Answer answer, Callback<Result> cb);
     }
 
-    /*
+
     int qid;
     //TODO go buy a server already
     String host;
     WookieService wookie;
     String mId;
 
-    */
+    private void start() {
+        final String wsuri = "ws://echo.websocket.org:80/";
+        try {
+            mConnection.connect(wsuri, new WebSocketHandler() {
+
+                @Override
+                public void onOpen() {
+                    Log.d(TAG, "Status: Connected to " + wsuri);
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    Log.d(TAG, "Got echo: " + payload);
+                }
+
+                @Override
+                public void onBinaryMessage(byte[] payload) {
+                    Log.d(TAG, "Got echo: " + payload);
+                }
+
+                @Override
+                public void onClose(int code, String reason) {
+                    Log.d(TAG, "Connection lost.");
+                }
+            });
+        } catch (WebSocketException e) {
+            Log.d(TAG, e.toString());
+        }
+    }
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+
         Intent mIntent = getIntent();
         String classId = mIntent.getStringExtra(MainActivity.EXTRA_CLASS_ID);
 
-        /*
+        start();
+
         //TODO remember how savedInstanceState works?
         if (savedInstanceState == null) {
             getActionBar().setTitle("Quiz");
@@ -91,12 +134,15 @@ public class QuizActivity extends Activity {
             this.mId = mId + mPin;
 
             RestAdapter ra = new RestAdapter.Builder()
-                    .setServer("http://"+host) //dicey
+                    .setServer("http://" + host) //dicey
                     .build();
 
             wookie = ra.create(WookieService.class);
+        }
 
-            */
+
+
+
 
             //Sample/Test Questions
             //sample multiple choice question
@@ -122,16 +168,16 @@ public class QuizActivity extends Activity {
                 String[] answerChoices = ((MCQuestion) mQuestion).getAnswerChoices();
                 args.putString("type", "MC");
                 args.putStringArray("answer_choices", answerChoices);
-                Log.d(TAG, "mQuestion is a MCQuestion");
+                Log.d("QUESTION", "mQuestion is a MCQuestion");
             }
             else if(mQuestion instanceof TFQuestion) {
                 args.putString("type", "TF");
-                Log.d(TAG, "mQuestion is a TFQuestion");
+                Log.d("QUESTION", "mQuestion is a TFQuestion");
             }
             else if(mQuestion instanceof SAQuestion) {
                 //no answer args to pass for short answer questions
                 args.putString("type", "SA");
-                Log.d(TAG, "mQuestion is a SAQuestion");
+                Log.d("QUESTION", "mQuestion is a SAQuestion");
             }
 
 
@@ -145,7 +191,7 @@ public class QuizActivity extends Activity {
 
     }
 
-    /*
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //TODO maybe back button?
@@ -154,8 +200,17 @@ public class QuizActivity extends Activity {
 
 
     public void onAnswerSelected(final int offset) {
-        /*
+
         Answer ans = new Answer(offset, mId);
+        JSONObject json = new JSONObject();
+        //json.put("json_payload", "default");
+        try {
+            json.put("json_payload", Integer.toString(offset));
+        } catch (JSONException e) {
+            Log.d("quiz activity", "error making json");
+        }
+        mConnection.sendTextMessage(json.toString());
+
         wookie.answer(qid, ans, new Callback<Result>() {
             @Override
             public void failure(final RetrofitError error) {
@@ -195,6 +250,5 @@ public class QuizActivity extends Activity {
 
 
     }
-    */
 
 }

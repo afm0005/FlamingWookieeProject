@@ -1,6 +1,7 @@
 package com.android.flamingwookiee;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -20,6 +21,13 @@ import android.widget.TextView;
 public class SplashFragment extends Fragment {
     private Button mAddClassButton;
     private TextView mCurrentUser;
+    private Button mStartWS;
+
+    public interface OnStartSelectedListener {
+        public void onStartSelected();
+    }
+
+    OnStartSelectedListener mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +45,14 @@ public class SplashFragment extends Fragment {
             }
         });
 
+        mStartWS = (Button) v.findViewById(R.id.start_ws);
+        mStartWS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallback.onStartSelected();
+            }
+        });
+
         //Displays the current username in the top-right corner of home page
         mCurrentUser = (TextView) v.findViewById(R.id.current_user);
         SharedPreferences mPref = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -44,4 +60,5 @@ public class SplashFragment extends Fragment {
 
         return v;
     }
+
 }

@@ -39,6 +39,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Add a class"/>
+        <Button
+            android:id="@+id/start_ws"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="start"/>
+        <TextView
+            android:id="@+id/user_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

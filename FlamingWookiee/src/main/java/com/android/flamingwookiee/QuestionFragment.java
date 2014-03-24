@@ -28,13 +28,10 @@ public class QuestionFragment extends Fragment {
     private TextView mQuestionArea;
     private LinearLayout mAnswerArea;
 
-    /*
     OnAnswerSelectedListener mCallback;
     String question;
     String[] answers;
-    //TODO type
 
-    /*
     public interface OnAnswerSelectedListener {
         public void onAnswerSelected(int offset);
     }
@@ -55,7 +52,6 @@ public class QuestionFragment extends Fragment {
         }
 
     }
-    */
 
 
     @Override
@@ -75,12 +71,41 @@ public class QuestionFragment extends Fragment {
 
         if(args.getString("type").equals("MC")) {
             //Create MC question in AnswerArea
+            /*
             String[] answerChoices = args.getStringArray("answer_choices");
-            for(String choice : answerChoices) {
+            Button[] choiceButtons = new Button[answerChoices.length];
+            for(int i = 0; i < answerChoices.length; i++) {
                 Button choiceButton = new Button(getActivity());
-                choiceButton.setText(choice);
+                choiceButton.setText(answerChoices[i]);
                 mAnswerArea.addView(choiceButton);
+                choiceButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mCallback.onAnswerSelected(1);
+
+                    }
+                });
+                choiceButtons[i] = choiceButton;
             }
+            */
+            String[] answerChoices = args.getStringArray("answer_choices");
+            final RadioButton[] rb = new RadioButton[answerChoices.length];
+            RadioGroup rg = new RadioGroup(getActivity());
+            rg.setOrientation(RadioGroup.VERTICAL);
+            for(int i = 0; i < rb.length; i++) {
+                rb[i] = new RadioButton(getActivity());
+                rg.addView(rb[i]);
+                rb[i].setText(answerChoices[i]);
+            }
+            mAnswerArea.addView(rg);
+            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    mCallback.onAnswerSelected(group.indexOfChild(group.findViewById(checkedId)));
+
+                }
+
+            });
         }
         else if(args.getString("type").equals("TF")) {
             //Create T/F question in AnswerArea
@@ -104,14 +129,6 @@ public class QuestionFragment extends Fragment {
         mQuestionArea.setText(args.getString("question"));
 
         /*
-        RadioGroup answerButtons = (RadioGroup) v.findViewById(R.id.answers);
-
-        for (String a : answers) {
-            RadioButton button = (RadioButton) inflater.inflate(R.layout.answer_button, null);
-            button.setText(a);
-            answerButtons.addView(button);
-            //TODO check index...
-        }
 
         answerButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

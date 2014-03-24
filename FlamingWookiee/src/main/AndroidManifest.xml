@@ -13,7 +13,7 @@
     <application
         android:allowBackup="true"
         android:debuggable="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/wq_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -21,11 +21,18 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" android:host="www.twitter.com"/>
+            </intent-filter>
+
         </activity>
         <activity
+            android:theme="@android:style/Theme.Holo"
             android:name=".QuizActivity"
             android:label="Quiz"
             android:parentActivityName=".MainActivity">

@@ -10,21 +10,16 @@ public class TFQuestion extends Question {
 
     public TFQuestion(String question) {
         super(question);
+        mTrueChoice = "True";
+        mFalseChoice = "False";
     }
 
     public String getTrueChoice() {
         return mTrueChoice;
     }
 
-    public void setTrueChoice(String trueChoice) {
-        mTrueChoice = trueChoice;
-    }
-
     public String getFalseChoice() {
         return mFalseChoice;
     }
 
-    public void setFalseChoice(String falseChoice) {
-        mFalseChoice = falseChoice;
-    }
 }
