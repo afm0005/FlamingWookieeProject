@@ -20,9 +20,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.tavendo.autobahn.Wamp;
+import de.tavendo.autobahn.WampConnection;
+import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
+import de.tavendo.autobahn.WebSocketConnectionHandler;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -41,7 +44,7 @@ public class QuizActivity extends Activity implements QuestionFragment.OnAnswerS
 
 
     private Question mQuestion;
-    private final WebSocketConnection mConnection = new WebSocketConnection();
+    private final Wamp mConnection = new WampConnection();
     static final String TAG = "de.tavendo.autobahn.echo";
 
 
@@ -75,35 +78,54 @@ public class QuizActivity extends Activity implements QuestionFragment.OnAnswerS
     WookieService wookie;
     String mId;
 
-    private void start() {
-        final String wsuri = "ws://echo.websocket.org:80/";
-        try {
-            mConnection.connect(wsuri, new WebSocketHandler() {
+    private static class MyEvent1 {
+        public String question;
+        public String answer1;
+        public String answer2;
+        public String[] answers;
 
-                @Override
-                public void onOpen() {
-                    Log.d(TAG, "Status: Connected to " + wsuri);
-                }
-
-                @Override
-                public void onTextMessage(String payload) {
-                    Log.d(TAG, "Got echo: " + payload);
-                }
-
-                @Override
-                public void onBinaryMessage(byte[] payload) {
-                    Log.d(TAG, "Got echo: " + payload);
-                }
-
-                @Override
-                public void onClose(int code, String reason) {
-                    Log.d(TAG, "Connection lost.");
-                }
-            });
-        } catch (WebSocketException e) {
-            Log.d(TAG, e.toString());
+        @Override
+        public String toString() {
+            return question + answer1 + answer2 + answers[0] + answers[1] + answers[2];
         }
     }
+
+    private void start() {
+        final String wsuri = "ws://192.168.2.3:9000";
+
+        mConnection.connect(wsuri, new Wamp.ConnectionHandler() {
+
+            @Override
+            public void onOpen() {
+                Log.d(TAG, "Connected to server" + wsuri);
+                mConnection.subscribe("http://example.com/myEvent1", MyEvent1.class, new Wamp.EventHandler() {
+
+                    @Override
+                public void onEvent(String topicUri, Object event) {
+                        MyEvent1 q = (MyEvent1) event;
+                        Log.d(TAG, "Received: " + q.toString());
+
+                        Bundle args = new Bundle();
+                        args.putString("question", q.question);
+                        args.putString("type", "MC");
+                        args.putStringArray("answer_choices", q.answers);
+                        Fragment qf = new QuestionFragment();
+                        qf.setArguments(args);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, qf)
+                                .commit();
+                    }
+                });
+            }
+
+            @Override
+            public void onClose(int code, String reason) {
+                Log.d(TAG, "WAMP closed");
+            }
+        });
+
+    }
+
 
 
 
@@ -205,12 +227,12 @@ public class QuizActivity extends Activity implements QuestionFragment.OnAnswerS
         JSONObject json = new JSONObject();
         //json.put("json_payload", "default");
         try {
-            json.put("json_payload", Integer.toString(offset));
+            json.put("answer", Integer.toString(offset));
         } catch (JSONException e) {
             Log.d("quiz activity", "error making json");
         }
-        mConnection.sendTextMessage(json.toString());
 
+        mConnection.publish("http://example.com/myEvent1", json.toString());
         wookie.answer(qid, ans, new Callback<Result>() {
             @Override
             public void failure(final RetrofitError error) {

@@ -36,7 +36,6 @@ import java.util.List;
 
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;

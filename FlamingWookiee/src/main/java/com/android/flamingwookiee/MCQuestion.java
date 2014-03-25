@@ -18,4 +18,10 @@ public class MCQuestion extends Question{
     public String[] getAnswerChoices() {
         return mAnswerChoices;
     }
+
+    @Override
+    public String toString() {
+        return "{question: " + super.getQuestion() +
+                ", answerChoices: " + mAnswerChoices + "}";
+    }
 }
