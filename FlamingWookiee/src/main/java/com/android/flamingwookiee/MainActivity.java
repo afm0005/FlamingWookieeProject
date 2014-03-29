@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketConnectionHandler;
 import de.tavendo.autobahn.WebSocketException;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -52,7 +54,6 @@ public class MainActivity extends Activity implements
 
     static final String TAG = "de.tavendo.autobahn.echo";
     public final static String EXTRA_CLASS_ID = "com.android.flamingwookiee.CLASS_ID";
-    private static final String WOOKIEE_URL = "absker.com:5432";
 
     private Class mCurrClass;
     private ArrayList<Class> mClassList;
@@ -80,6 +81,38 @@ public class MainActivity extends Activity implements
     static class User {
         String name;
     }
+
+    final WebSocket con = new WebSocketConnection();
+    private void start() {
+        final String wsuri = "ws://174.129.224.73:80";
+        try {
+            con.connect(wsuri, new WebSocketConnectionHandler() {
+
+                @Override
+                public void onOpen() {
+                    Log.d(TAG, "Status: Connected to " + wsuri);
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    Log.d(TAG, "Got echo: " + payload);
+                }
+
+                @Override
+                public void onBinaryMessage(byte[] payload) {
+                    Log.d(TAG, "Got echo: " + payload);
+                }
+
+                 @Override
+                 public void onClose(int code, String reason) {
+                    Log.d(TAG, "Connection lost.");
+                 }
+            });
+        } catch (WebSocketException e) {
+            Log.d(TAG, e.toString());
+        }
+    }
+
 
     public interface WookieService {
         @PUT("/quiz/{id}/answer")
@@ -117,6 +150,8 @@ public class MainActivity extends Activity implements
                     , studentId);
             ClassList.get(this).addClass(newClass);
         }
+
+        start();
 
         mClassList = ClassList.get(this).getClasses();
 

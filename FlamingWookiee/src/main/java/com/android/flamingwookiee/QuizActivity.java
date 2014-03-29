@@ -98,7 +98,10 @@ public class QuizActivity extends Activity implements QuestionFragment.OnAnswerS
             @Override
             public void onOpen() {
                 Log.d(TAG, "Connected to server" + wsuri);
-                mConnection.subscribe("http://example.com/myEvent1", MyEvent1.class, new Wamp.EventHandler() {
+
+
+                mConnection.prefix("quiz", "http://wookiee.com/quiz#");
+                mConnection.subscribe("quiz:quiz2", MyEvent1.class, new Wamp.EventHandler() {
 
                     @Override
                 public void onEvent(String topicUri, Object event) {
@@ -232,7 +235,7 @@ public class QuizActivity extends Activity implements QuestionFragment.OnAnswerS
             Log.d("quiz activity", "error making json");
         }
 
-        mConnection.publish("http://example.com/myEvent1", json.toString());
+        mConnection.publish("quiz:quiz2", json.toString());
         wookie.answer(qid, ans, new Callback<Result>() {
             @Override
             public void failure(final RetrofitError error) {
