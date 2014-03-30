@@ -1,4 +1,4 @@
-package com.android.flamingwookiee;
+package com.android.flamingwookiee.classes;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,7 +15,7 @@ public class ClassList {
 
     private static ClassList sClassList;
     private Context mAppContext;
-    private ArrayList<Class> mClasses;
+    private ArrayList<com.android.flamingwookiee.classes.Class> mClasses;
     private ClassJSONSerializer mSerializer;
 
 

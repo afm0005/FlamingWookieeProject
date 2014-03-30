@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import com.android.flamingwookiee.classes.Class;
+import com.android.flamingwookiee.classes.ClassList;
 
 /**
  * Created by Andrew on 3/10/14.
@@ -26,9 +27,6 @@ public class AddClassDialogFragment extends DialogFragment {
     }
 
     private AddClassDialogListener mListener;
-
-    private EditText mClassHash;
-    private EditText mStudentHash;
 
     @Override
     public void onAttach(Activity activity) {
@@ -50,22 +48,18 @@ public class AddClassDialogFragment extends DialogFragment {
 
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_class, null);
 
-        mClassHash = (EditText) v.findViewById(R.id.class_hash);
-        mStudentHash = (EditText) v.findViewById(R.id.student_hash);
+        final EditText mClassName = (EditText) v.findViewById(R.id.class_name);
+        final EditText mClassHash = (EditText) v.findViewById(R.id.class_hash);
+        final EditText mStudentHash = (EditText) v.findViewById(R.id.student_hash);
 
         builder.setTitle("Add Class");
         builder.setView(v);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //search for class... can be done via http/retrofit
-                /*Sends the hash.. gets back a class name to display
-                and a class id to connect to a quiz.
-                Also maybe send this event back to main activity.
-                 */
 
-                Class newClass = new Class(mClassHash.getText().toString(), "1234"
-                        ,mStudentHash.getText().toString());
+                com.android.flamingwookiee.classes.Class newClass = new Class(mClassName.getText().toString(), mClassHash.getText().toString(),
+                        mStudentHash.getText().toString());
                 ClassList.get(getActivity()).addClass(newClass);
 
                 mListener.onAddClassDialogPositiveClick(AddClassDialogFragment.this);

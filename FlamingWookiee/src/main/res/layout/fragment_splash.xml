@@ -8,22 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/current_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"/>
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
@@ -33,21 +17,13 @@
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:text="@string/welcome_banner" />
+
         <Button
             android:id="@+id/add_class"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Add a class"/>
-        <Button
-            android:id="@+id/start_ws"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="start"/>
-        <TextView
-            android:id="@+id/user_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.android.flamingwookiee;
+package com.android.flamingwookiee.classes;
 
 import org.json.JSONException;
 import org.json.JSONObject;

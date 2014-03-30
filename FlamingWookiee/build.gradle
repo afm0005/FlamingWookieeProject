@@ -26,5 +26,5 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
     compile 'com.squareup.retrofit:retrofit:1.3.0'
-    compile project(':Autobahn')
+    compile files('libs/android-websockets.jar')
 }

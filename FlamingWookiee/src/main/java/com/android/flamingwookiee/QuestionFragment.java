@@ -3,19 +3,15 @@ package com.android.flamingwookiee;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.Set;
+import com.android.flamingwookiee.classes.Question;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -69,7 +65,8 @@ public class QuestionFragment extends Fragment {
 
         Bundle args = getArguments();
 
-        if(args.getString("type").equals("MC")) {
+        // TODO(reed): sorry dude just optimizing for MC to get this shit working
+//        if(args.getString("type").equals("MC")) {
             //Create MC question in AnswerArea
             /*
             String[] answerChoices = args.getStringArray("answer_choices");
@@ -88,45 +85,46 @@ public class QuestionFragment extends Fragment {
                 choiceButtons[i] = choiceButton;
             }
             */
+            mQuestionArea= (TextView) v.findViewById(R.id.question);
+            mQuestionArea.setText(args.getString("question"));
+
             String[] answerChoices = args.getStringArray("answer_choices");
-            final RadioButton[] rb = new RadioButton[answerChoices.length];
-            RadioGroup rg = new RadioGroup(getActivity());
-            rg.setOrientation(RadioGroup.VERTICAL);
-            for(int i = 0; i < rb.length; i++) {
-                rb[i] = new RadioButton(getActivity());
-                rg.addView(rb[i]);
-                rb[i].setText(answerChoices[i]);
-            }
-            mAnswerArea.addView(rg);
-            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    mCallback.onAnswerSelected(group.indexOfChild(group.findViewById(checkedId)));
+            if (answerChoices != null) {
+                final RadioButton[] rb = new RadioButton[answerChoices.length];
+                RadioGroup rg = new RadioGroup(getActivity());
+                rg.setOrientation(RadioGroup.VERTICAL); // TODO yikes... just set in manifest instead
+                for(int i = 0; i < rb.length; i++) {
+                    rb[i] = new RadioButton(getActivity());
+                    rg.addView(rb[i]);
+                    rb[i].setText(answerChoices[i]);
+                }
+                mAnswerArea.addView(rg);
+                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                  @Override
+                                                  public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        mCallback.onAnswerSelected(group.indexOfChild(group.findViewById(checkedId)));
 
                 }
 
-            });
-        }
-        else if(args.getString("type").equals("TF")) {
-            //Create T/F question in AnswerArea
-            Button trueButton = new Button(getActivity());
-            Button falseButton = new Button(getActivity());
-            trueButton.setText("True");
-            falseButton.setText("False");
-            mAnswerArea.addView(trueButton);
-            mAnswerArea.addView(falseButton);
-        }
-        else if(args.getString("type").equals("SA")) {
-            //Create SA question in AnswerArea
-            EditText answerField = new EditText(getActivity());
-            mAnswerArea.addView(answerField);
-        }
-        else {
-            Log.d(TAG, "Error in bundle");
-        }
-
-        mQuestionArea= (TextView) v.findViewById(R.id.question);
-        mQuestionArea.setText(args.getString("question"));
+                });
+            }
+//        else if(args.getString("type").equals("TF")) {
+//            //Create T/F question in AnswerArea
+//            Button trueButton = new Button(getActivity());
+//            Button falseButton = new Button(getActivity());
+//            trueButton.setText("True");
+//            falseButton.setText("False");
+//            mAnswerArea.addView(trueButton);
+//            mAnswerArea.addView(falseButton);
+//        }
+//        else if(args.getString("type").equals("SA")) {
+//            //Create SA question in AnswerArea
+//            EditText answerField = new EditText(getActivity());
+//            mAnswerArea.addView(answerField);
+//        }
+//        else {
+//            Log.d(TAG, "Error in bundle");
+//        }
 
         /*
 

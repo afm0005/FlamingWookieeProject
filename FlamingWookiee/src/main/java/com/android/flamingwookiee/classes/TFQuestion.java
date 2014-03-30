@@ -1,4 +1,4 @@
-package com.android.flamingwookiee;
+package com.android.flamingwookiee.classes;
 
 /**
  * Created by Andrew on 3/11/14.

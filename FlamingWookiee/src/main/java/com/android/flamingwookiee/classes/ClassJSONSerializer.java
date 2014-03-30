@@ -1,6 +1,8 @@
-package com.android.flamingwookiee;
+package com.android.flamingwookiee.classes;
 
 import android.content.Context;
+
+import com.android.flamingwookiee.classes.Class;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +30,7 @@ public class ClassJSONSerializer {
         mFilename = f;
     }
 
-    public void saveClasses(ArrayList<Class> classes)
+    public void saveClasses(ArrayList<com.android.flamingwookiee.classes.Class> classes)
         throws JSONException, IOException {
         JSONArray array = new JSONArray();
         for (Class c : classes)

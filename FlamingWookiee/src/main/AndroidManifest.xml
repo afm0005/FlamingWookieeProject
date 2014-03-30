@@ -31,13 +31,6 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:theme="@android:style/Theme.Holo"
-            android:name=".QuizActivity"
-            android:label="Quiz"
-            android:parentActivityName=".MainActivity">
-
-            </activity>
 
     </application>
 

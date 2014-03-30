@@ -6,14 +6,19 @@
               android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/class_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter class name here"/>
+    <EditText
         android:id="@+id/class_hash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter class here..."/>
+        android:hint="Enter class id here (from email)"/>
     <EditText
         android:id="@+id/student_hash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter student here..."/>
+        android:hint="Enter student here (from email)"/>
 
 </LinearLayout>
