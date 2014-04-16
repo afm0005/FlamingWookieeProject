@@ -19,11 +19,6 @@ public class ClassList {
     private ClassJSONSerializer mSerializer;
 
 
-    //test data
-    //Class class1 = new Class("Comp 1000", "1111");
-    //Class class2 = new Class("Phil 1100", "5555");
-    //Class class3 = new Class("Math 3240", "3333");
-
     private ClassList(Context appContext) {
         mAppContext = appContext;
         //mClasses = new ArrayList<Class>();
@@ -36,9 +31,6 @@ public class ClassList {
             Log.e(TAG, "Error loading classes: ", e);
         }
 
-        //mClasses.add(class1);
-        //mClasses.add(class2);
-        //mClasses.add(class3);
     }
 
     public static ClassList get(Context c) {

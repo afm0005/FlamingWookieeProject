@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FlamingWookiee</string>
+    <string name="app_name">Classroom Clicker</string>
     <string name="enter_url_text">Enter URL</string>
     <string name="url_hint">e.g. http://flamingwookiee.me</string>
     <string name="send_button_text">Send</string>
@@ -18,8 +18,11 @@
     <string name="connect">Connect</string>
     <string name="take_quiz_label">Start Quiz</string>
     <string name="classes_title">Classes</string>
-    <string name="welcome_banner">Welcome to WooQuiz, choose a class from the left drawer.</string>
+    <string name="welcome_banner">Classroom Clicker</string>
     <string name="class_hash_hint">Enter code here...</string>
     <string name="username_field_hint">Enter email here...</string>
+    <string name="roll_call_header">Are you here?</string>
+    <string name="roll_call_button">Yes, I am here</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

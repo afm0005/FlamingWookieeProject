@@ -27,7 +27,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="http" android:host="www.twitter.com"/>
+                <data android:scheme="http" android:host="www.wooquiz.com"/>
             </intent-filter>
 
         </activity>

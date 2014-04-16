@@ -7,6 +7,8 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +22,15 @@ import android.widget.TextView;
  */
 public class SplashFragment extends Fragment {
     private Button mAddClassButton;
-    private TextView mCurrentUser;
+    private TextView mHomeBanner;
     private Button mStartWS;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_splash, container, false);
+        v.setBackgroundColor(Color.rgb(94, 136, 159));
+
 
         //Add a class button, shows add a class dialog
         mAddClassButton = (Button) v.findViewById(R.id.add_class);
