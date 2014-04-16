@@ -1,5 +1,6 @@
 package com.android.flamingwookiee;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -84,10 +86,52 @@ public class MainActivity extends Activity implements
         mDrawerList.setAdapter(new ArrayAdapter<Class>(this,
                 R.layout.drawer_list_item, mClassList));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        registerForContextMenu(mDrawerList);
 
         if (savedInstanceState == null) {
             showHome();
         }
+
+
+    }
+
+    //Creates context menu for the the class list.
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.left_drawer) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(mClassList.get(info.position).getTitle() + "\nClass id: " +
+            mClassList.get(info.position).getClassId() + "\nStudent id: " +
+            mClassList.get(info.position).getStudentId());
+            String[] menuItems = {"Edit", "Delete"};
+            for (int i = 0; i <menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    //Performs behavior of the chosen menu item of class context menu.
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex  = item.getItemId();
+        String[] menuItems = {"Edit", "Delete"};
+        String menuItemName = menuItems[menuItemIndex];
+        String listItemName = mClassList.get(info.position).getTitle();
+
+        switch (menuItemIndex) {
+            case 0: //open edit dialog?
+                    break;
+            case 1: ClassList.get(this).removeClass(mClassList.get(info.position));
+                mDrawerList.setAdapter(new ArrayAdapter<Class>(this,
+                        R.layout.drawer_list_item, mClassList));
+                mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+                    ClassList.get(this).saveClasses();
+                    break;
+        }
+
+        return true;
     }
 
     private void showHome() {
@@ -145,14 +189,14 @@ public class MainActivity extends Activity implements
                                 Log.d(TAG, "Connected to ws://"+TODAYS_IP+":8080/takeme/");
 
 
-                                /*
+
                                 String[] blank = {};
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 transaction.replace(R.id.content_frame, MessageFragment.newInstance("Waiting for quiz to start", blank));
                                 transaction.addToBackStack(null);
                                 transaction.commit();
 
-                                */
+                                /*
                                 Fragment qf = new QuestionFragment();
 
                                 Bundle args = new Bundle();
@@ -162,6 +206,7 @@ public class MainActivity extends Activity implements
                                 getFragmentManager().beginTransaction()
                                         .replace(R.id.content_frame, qf)
                                         .commit();
+                                        */
 
 
                             }
@@ -174,13 +219,13 @@ public class MainActivity extends Activity implements
                                 Gson gson = new Gson();
                                 Reply reply = gson.fromJson(message, Reply.class);
 
-                                /*
+
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 transaction.replace(R.id.content_frame, MessageFragment.newInstance(reply.text, reply.answers));
                                 transaction.addToBackStack(null);
                                 transaction.commit();
 
-                                */
+                                /*
                                 Bundle args = new Bundle();
 
                                 args.putString("question", reply.text);
@@ -191,6 +236,7 @@ public class MainActivity extends Activity implements
                                 getFragmentManager().beginTransaction()
                                         .replace(R.id.content_frame, qf)
                                         .commit();
+                                        */
 
 
                             }
@@ -227,14 +273,6 @@ public class MainActivity extends Activity implements
             //setTitle(mClassList.get(position));
             mDrawerLayout.closeDrawer(mDrawerList);
 
-
-            /*
-            String[] test = {"Choice 1", "Choice 2", "Choice 3"};
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, MessageFragment.newInstance("This is a Question", test));
-            transaction.addToBackStack(null);
-            transaction.commit();
-            */
 
 
         }

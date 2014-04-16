@@ -11,15 +11,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.flamingwookiee.classes.Question;
-
 /**
  * A placeholder fragment containing a simple view.
  */
 public class QuestionFragment extends Fragment {
     private static final String TAG = "QuestionFragment";
-
-    private Question mQuestion;
 
     private TextView mQuestionArea;
     private LinearLayout mAnswerArea;
@@ -53,7 +49,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mQuestion = new Question("Default Question: Are you alive?");
+
     }
 
     @Override

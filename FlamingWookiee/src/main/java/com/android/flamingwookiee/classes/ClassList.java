@@ -56,6 +56,10 @@ public class ClassList {
         mClasses.add(c);
     }
 
+    public void removeClass(Class c) {
+        mClasses.remove(c);
+    }
+
     public boolean saveClasses() {
         try {
             mSerializer.saveClasses(mClasses);
