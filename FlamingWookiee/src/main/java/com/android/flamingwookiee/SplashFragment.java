@@ -32,17 +32,6 @@ public class SplashFragment extends Fragment {
         v.setBackgroundColor(Color.rgb(94, 136, 159));
 
 
-        //Add a class button, shows add a class dialog
-        mAddClassButton = (Button) v.findViewById(R.id.add_class);
-        mAddClassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = new AddClassDialogFragment();
-                dialogFragment.show(getFragmentManager(), "add_class");
-
-            }
-        });
-
         return v;
     }
 

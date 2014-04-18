@@ -24,13 +24,6 @@
             android:textSize="22sp"
             android:text="@string/welcome_banner"/>
 
-        <Button
-            android:id="@+id/add_class"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Add a class"/>
-
         </LinearLayout>
 
 
