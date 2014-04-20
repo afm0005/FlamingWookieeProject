@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,22 +10,38 @@
             android:id="@+id/message_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+            android:layout_marginBottom="24dp"
             android:gravity="center"
-            android:textSize="14sp"
-            android:text="HELLO"/>
+            android:textSize="20sp"/>
+
+        <ProgressBar
+            android:id="@+id/wait_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/message_text"
+            android:visibility="gone"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:layout_below="@id/message_text" >
 
 
-        <RadioGroup
-            android:id="@+id/choice_group"
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            <RadioGroup
+                android:id="@+id/choice_group"
+                android:layout_below="@+id/message_text"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
 
 
-        </RadioGroup>
+            </RadioGroup>
+        </ScrollView>
 
 
-
-
-</LinearLayout>
+</RelativeLayout>

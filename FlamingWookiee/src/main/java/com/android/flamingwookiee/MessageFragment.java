@@ -2,12 +2,16 @@ package com.android.flamingwookiee;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -75,10 +79,15 @@ public class MessageFragment extends Fragment {
 
         mChoiceGroup = (RadioGroup) v.findViewById(R.id.choice_group);
 
-        for (String choice : mMessageChoices) {
-            final RadioButton radioButton = new RadioButton(getActivity());
-            mChoiceGroup.addView(radioButton);
-            radioButton.setText(choice);
+        RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+
+        char c = 'A';
+        for (int i = 0; i < mMessageChoices.length; i++) {
+            final RadioButton radioButton = (RadioButton) inflater.inflate(R.layout.radio_button, null);
+            mChoiceGroup.addView(radioButton, layoutParams);
+            radioButton.setText(c++ + " - " + mMessageChoices[i]);
         }
 
 
@@ -90,6 +99,11 @@ public class MessageFragment extends Fragment {
             }
 
         });
+
+        if(mMessageChoices.length == 0) {
+            ProgressBar progress = (ProgressBar) v.findViewById(R.id.wait_spinner);
+            progress.setVisibility(View.VISIBLE);
+        }
 
         return v;
     }
@@ -131,5 +145,6 @@ public class MessageFragment extends Fragment {
     public interface OnMessageResponseListener {
         public void onMessageResponse(int offset);
     }
+
 
 }

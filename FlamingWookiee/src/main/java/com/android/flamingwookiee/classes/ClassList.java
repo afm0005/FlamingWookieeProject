@@ -21,7 +21,6 @@ public class ClassList {
 
     private ClassList(Context appContext) {
         mAppContext = appContext;
-        //mClasses = new ArrayList<Class>();
         mSerializer = new ClassJSONSerializer(mAppContext, FILENAME);
 
         try {
@@ -42,6 +41,14 @@ public class ClassList {
 
     public ArrayList<Class> getClasses() {
         return mClasses;
+    }
+
+    public ArrayList<String> getClassTitles() {
+        ArrayList<String> titles = new ArrayList<String>();
+        for (Class c : mClasses) {
+            titles.add(c.getTitle());
+        }
+        return titles;
     }
 
     public Class getClass(UUID id) {

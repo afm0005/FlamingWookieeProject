@@ -23,7 +23,9 @@ public class AddClassDialogFragment extends DialogFragment {
      * Each method passes the DialogFragment in case the host needs to query it.
      */
     public interface AddClassDialogListener {
-        public void onAddClassDialogPositiveClick(DialogFragment fragment);
+        public void onAddClassDialogPositiveClick(DialogFragment fragment,
+                                                  String title, String cId,
+                                                  String sId);
     }
 
     private AddClassDialogListener mListener;
@@ -48,9 +50,9 @@ public class AddClassDialogFragment extends DialogFragment {
 
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_class, null);
 
-        final EditText mClassName = (EditText) v.findViewById(R.id.class_name);
-        final EditText mClassHash = (EditText) v.findViewById(R.id.class_hash);
-        final EditText mStudentHash = (EditText) v.findViewById(R.id.student_hash);
+        final EditText mClassTitle = (EditText) v.findViewById(R.id.class_name);
+        final EditText mClassId = (EditText) v.findViewById(R.id.class_hash);
+        final EditText mStudentId = (EditText) v.findViewById(R.id.student_hash);
 
         builder.setTitle("Add Class");
         builder.setView(v);
@@ -58,11 +60,9 @@ public class AddClassDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                com.android.flamingwookiee.classes.Class newClass = new Class(mClassName.getText().toString(), mClassHash.getText().toString(),
-                        mStudentHash.getText().toString());
-                ClassList.get(getActivity()).addClass(newClass);
-
-                mListener.onAddClassDialogPositiveClick(AddClassDialogFragment.this);
+                mListener.onAddClassDialogPositiveClick(AddClassDialogFragment.this,
+                        mClassTitle.getText().toString(), mClassId.getText().toString(),
+                        mStudentId.getText().toString());
 
             }
         });
