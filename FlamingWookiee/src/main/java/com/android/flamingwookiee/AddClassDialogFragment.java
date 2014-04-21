@@ -9,24 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.android.flamingwookiee.classes.Class;
-import com.android.flamingwookiee.classes.ClassList;
-
 /**
  * Created by Andrew on 3/10/14.
  */
 public class AddClassDialogFragment extends DialogFragment {
-
-    /* The activity/fragment that creates an instance of this dialog fragment
-     * must implement this interface in order to receive the event callbacks.
-     * In this case the homepage will need the update the class list.
-     * Each method passes the DialogFragment in case the host needs to query it.
-     */
-    public interface AddClassDialogListener {
-        public void onAddClassDialogPositiveClick(DialogFragment fragment,
-                                                  String title, String cId,
-                                                  String sId);
-    }
 
     private AddClassDialogListener mListener;
 
@@ -68,5 +54,16 @@ public class AddClassDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    /* The activity/fragment that creates an instance of this dialog fragment
+     * must implement this interface in order to receive the event callbacks.
+     * In this case the homepage will need the update the class list.
+     * Each method passes the DialogFragment in case the host needs to query it.
+     */
+    public interface AddClassDialogListener {
+        public void onAddClassDialogPositiveClick(DialogFragment fragment,
+                                                  String title, String cId,
+                                                  String sId);
     }
 }
