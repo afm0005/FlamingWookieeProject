@@ -33,7 +33,7 @@ public class ClassList {
     }
 
     public static ClassList get(Context c) {
-        if(sClassList == null) {
+        if (sClassList == null) {
             sClassList = new ClassList(c.getApplicationContext());
         }
         return sClassList;

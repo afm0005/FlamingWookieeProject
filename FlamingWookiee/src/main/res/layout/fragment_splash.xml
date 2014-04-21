@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/white"
         android:gravity="center"
-        android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
 
@@ -19,13 +21,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:textSize="22sp"
-            android:text="@string/welcome_banner"/>
-
-        </LinearLayout>
+            android:text="Welcome to Classroom Clicker"/>
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:fontFamily="sans-serif"
+            android:text="Add a class or choose a class from the drawer to get started"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-bold"
+            android:gravity="center_horizontal"
+            android:text="Good Luck!"
+            />
+    </LinearLayout>
+
+    </RelativeLayout>
+
