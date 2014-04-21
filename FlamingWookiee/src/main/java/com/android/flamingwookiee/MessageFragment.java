@@ -47,7 +47,6 @@ public class MessageFragment extends Fragment {
      * @param choices Parameter 2.
      * @return A new instance of fragment MessageFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MessageFragment newInstance(String text, String[] choices) {
         MessageFragment fragment = new MessageFragment();
         Bundle args = new Bundle();
@@ -104,6 +103,8 @@ public class MessageFragment extends Fragment {
             ProgressBar progress = (ProgressBar) v.findViewById(R.id.wait_spinner);
             progress.setVisibility(View.VISIBLE);
         }
+
+        getActivity().setTitle("Quiz");
 
         return v;
     }

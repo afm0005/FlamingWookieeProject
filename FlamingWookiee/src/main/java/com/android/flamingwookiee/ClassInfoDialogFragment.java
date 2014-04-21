@@ -30,6 +30,7 @@ public class ClassInfoDialogFragment extends DialogFragment {
      */
 
     private EditText mClassTitle;
+    private TextView mClassTitleLabel;
     private TextView mClassId;
     private TextView mStudentId;
     private ImageButton mEditTitle;
@@ -75,7 +76,8 @@ public class ClassInfoDialogFragment extends DialogFragment {
 
 
 
-        mClassTitle = (EditText) v.findViewById(R.id.class_name_text);
+        mClassTitle = (EditText) v.findViewById(R.id.class_name_field);
+        mClassTitleLabel = (TextView) v.findViewById(R.id.class_name_text);
         mClassId = (TextView) v.findViewById(R.id.class_id_text);
         mStudentId = (TextView) v.findViewById(R.id.student_id_text);
         mEditTitle = (ImageButton) v.findViewById(R.id.edit_name_button);
@@ -85,9 +87,10 @@ public class ClassInfoDialogFragment extends DialogFragment {
 
 
 
+        mClassTitleLabel.setText("Class Title: ");
         mClassTitle.setText(getArguments().getString("class_title"));
-        mClassId.setText(getArguments().getString("class_id"));
-        mStudentId.setText(getArguments().getString("student_id"));
+        mClassId.setText("Class ID: " + getArguments().getString("class_id"));
+        mStudentId.setText("Student ID: " + getArguments().getString("student_id"));
 
         mEditTitle.setOnClickListener(new View.OnClickListener() {
             @Override

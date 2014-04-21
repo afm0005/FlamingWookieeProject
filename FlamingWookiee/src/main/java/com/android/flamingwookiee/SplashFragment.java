@@ -17,19 +17,30 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by Andrew on 2/19/14.
  */
 public class SplashFragment extends Fragment {
-    private Button mAddClassButton;
     private TextView mHomeBanner;
-    private Button mStartWS;
 
+    public static SplashFragment newInstance() {
+        SplashFragment fragment = new SplashFragment();
+        return fragment;
+    }
+
+    public SplashFragment() {
+        //required empty constructor
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_splash, container, false);
-        v.setBackgroundColor(Color.rgb(94, 136, 159));
+
+        mHomeBanner = (TextView) v.findViewById(R.id.home_banner);
+        mHomeBanner.setText("Looks like you haven't added any classes yet, use the add class button above" +
+                " or add a class from your email link to get started!");
 
 
         return v;

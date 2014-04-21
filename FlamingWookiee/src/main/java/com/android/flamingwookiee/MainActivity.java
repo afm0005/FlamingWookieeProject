@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,8 +47,9 @@ import java.util.List;
 
 public class MainActivity extends Activity implements
         AddClassDialogFragment.AddClassDialogListener,
-        QuestionFragment.OnAnswerSelectedListener, MessageFragment.OnMessageResponseListener,
-        HomeFragment.OnGridInteractionListener, ClassInfoDialogFragment.ClassInfoDialogListener {
+        MessageFragment.OnMessageResponseListener,
+        HomeFragment.OnGridInteractionListener,
+        ClassInfoDialogFragment.ClassInfoDialogListener {
 
     public static final String TODAYS_IP = "24.178.89.28";
 
@@ -94,40 +96,27 @@ public class MainActivity extends Activity implements
             showHome();
         }
 
-        /*
-        getFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
-                        showHome();
-                    }
-                }
-        );
-        */
-
-
-        /*
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<Class>(this,
-                R.layout.drawer_list_item, mClassList));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        registerForContextMenu(mDrawerList);
-
-        if (savedInstanceState == null) {
-            showHome();
+        if (mClassList.isEmpty()) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, SplashFragment.newInstance());
+            transaction.addToBackStack(null);
+            transaction.commit();
         }
-        */
-
-
     }
 
     private void showHome() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, HomeFragment.newInstance(ClassList.get(this).getClassTitles(),"test"));
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if (mClassList.isEmpty()) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, SplashFragment.newInstance());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            //transaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+            transaction.replace(R.id.content_frame, HomeFragment.newInstance(ClassList.get(this).getClassTitles()));
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     //Class info dialog listener
@@ -145,6 +134,7 @@ public class MainActivity extends Activity implements
     //Grid context menu listener
     public void onGridContextMenuInteraction(int classPos, int menuPos) {
         mCurrentClass = mClassList.get(classPos);
+        final int position = classPos;
         switch (menuPos) {
             case 0: DialogFragment infoFragment = ClassInfoDialogFragment.newInstance(
                     mClassList.get(classPos).getTitle(),
@@ -152,10 +142,25 @@ public class MainActivity extends Activity implements
                     mClassList.get(classPos).getStudentId());
                     infoFragment.show(getFragmentManager(), "info_fragment");
                     break;
-            case 1: ClassList.get(this).removeClass(mClassList.get(classPos));
-                    ClassList.get(this).saveClasses();
-                    showHome();
+            case 1: AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Delete Class?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ClassList.get(getApplication()).removeClass(mClassList.get(position));
+                            ClassList.get(getApplication()).saveClasses();
+                            showHome();
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            showHome();
+                        }
+                    });
+                    builder.show();
                     break;
+
+
         }
 
     }
@@ -163,8 +168,6 @@ public class MainActivity extends Activity implements
     //Grid button listener
     public void onGridInteraction(int position) {
         mCurrentClass = mClassList.get(position);
-
-        Toast.makeText(MainActivity.this, "Grid button pressed", Toast.LENGTH_SHORT).show();
 
         try {
             List<BasicNameValuePair> extraHeaders = Arrays.asList(
@@ -184,6 +187,7 @@ public class MainActivity extends Activity implements
 
                             String[] blank = {};
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            //transaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
                             transaction.replace(R.id.content_frame, MessageFragment.newInstance("Waiting for quiz to start", blank));
                             transaction.addToBackStack(null);
                             transaction.commit();
@@ -199,6 +203,7 @@ public class MainActivity extends Activity implements
 
 
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            //transaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
                             transaction.replace(R.id.content_frame, MessageFragment.newInstance(reply.text, reply.answers));
                             transaction.addToBackStack(null);
                             transaction.commit();
@@ -273,91 +278,6 @@ public class MainActivity extends Activity implements
     public class Reply {
         String text;
         String[] answers;
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            //Class mClass = mClassList.get(position);
-
-            try {
-                List<BasicNameValuePair> extraHeaders = Arrays.asList(
-                        new BasicNameValuePair("Authorization", mCurrentClass.getStudentId())
-                );
-
-
-                mClient = new WebSocketClient(
-                        // TODO don't hard code
-
-                        URI.create("ws://"+TODAYS_IP+":8080/takeme/" + mCurrentClass.getClassId()),
-                        new WebSocketClient.Listener() {
-                            @Override
-                            public void onConnect() {
-                                Log.d(TAG, "Connected to ws://"+TODAYS_IP+":8080/takeme/");
-
-
-
-                                String[] blank = {};
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.content_frame, MessageFragment.newInstance("Waiting for quiz to start", blank));
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            }
-
-                            @Override
-                            public void onMessage(String message) {
-                                //make new fragment with args, eventually will get done in a callback
-                                Log.d(TAG, message);
-
-                                Gson gson = new Gson();
-                                Reply reply = gson.fromJson(message, Reply.class);
-
-
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.content_frame, MessageFragment.newInstance(reply.text, reply.answers));
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            }
-
-                            @Override
-                            public void onMessage(byte[] data) {
-                                Log.d(TAG, String.format("Got binary message! %s", data));
-                                // TODO hopefully never?
-                            }
-
-                            @Override
-                            public void onDisconnect(int code, String reason) {
-                                showHome();
-                                Log.d(TAG, String.format("Disconnected!"));
-                            }
-
-                            @Override
-                            public void onError(Exception error) {
-                                Log.d(TAG, String.format("error"));
-                                showHome(); // TODO probably not this here
-                            }
-
-                        }, extraHeaders
-                );
-
-                mClient.connect();
-
-            } catch (Exception e) {
-                Log.e("errors", e.toString());
-            }
-
-            //Highlight the selected item, update the title, and close the drawer
-            mDrawerList.setItemChecked(position, true);
-            //setTitle(mClassList.get(position));
-            mDrawerLayout.closeDrawer(mDrawerList);
-
-
-
-        }
-    }
-
-    public void onAnswerSelected(final int offset) {
-        mClient.send("{\"answer\":" + offset + "}");
     }
 
     @Override

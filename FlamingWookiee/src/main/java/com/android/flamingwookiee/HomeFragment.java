@@ -31,14 +31,10 @@ import java.util.ArrayList;
  *
  */
 public class HomeFragment extends Fragment implements GridView.OnItemClickListener{
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_CLASS_TITLES = "titles";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private ArrayList<String> mClassTitles;
-    private String mParam2;
 
     private GridView mGridView;
 
@@ -49,15 +45,13 @@ public class HomeFragment extends Fragment implements GridView.OnItemClickListen
      * this fragment using the provided parameters.
      *
      * @param titles Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(ArrayList<String> titles, String param2) {
+    public static HomeFragment newInstance(ArrayList<String> titles) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_CLASS_TITLES, titles);
-        args.putString(ARG_PARAM2, param2);
+        args.putStringArrayList(ARG_CLASS_TITLES, titles);;
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +64,6 @@ public class HomeFragment extends Fragment implements GridView.OnItemClickListen
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mClassTitles = getArguments().getStringArrayList(ARG_CLASS_TITLES);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -84,6 +77,8 @@ public class HomeFragment extends Fragment implements GridView.OnItemClickListen
                 R.layout.drawer_list_item, mClassTitles));
         registerForContextMenu(mGridView);
         mGridView.setOnItemClickListener(this);
+
+        getActivity().setTitle("Class List");
 
 
         return v;
