@@ -213,66 +213,66 @@ public class MainActivity extends Activity implements
 
 
                 mClient = new WebSocketClient(
-                    // TODO don't hard code
-                    URI.create(BASE_URL + mCurrentClass.getClassId()),
+                        // TODO don't hard code
+                        URI.create(BASE_URL + mCurrentClass.getClassId()),
 
-                    new WebSocketClient.Listener() {
-                        @Override
-                        public void onConnect() {
-                            Log.d(TAG, "Connected!");
+                        new WebSocketClient.Listener() {
+                            @Override
+                            public void onConnect() {
+                                Log.d(TAG, "Connected!");
 
-                            Fragment qf = new QuestionFragment();
+                                Fragment qf = new QuestionFragment();
 
-                            Bundle args = new Bundle();
-                            args.putString("question", "Waiting for quiz to start");
-                            qf.setArguments(args);
+                                Bundle args = new Bundle();
+                                args.putString("question", "Waiting for quiz to start");
+                                qf.setArguments(args);
 
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, qf)
-                                    .commit();
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content_frame, qf)
+                                        .commit();
 
 
-                            showClass(position);
-                        }
+                                showClass(position);
+                            }
 
-                        @Override
-                        public void onMessage(String message) {
-                            //make new fragment with args, eventually will get done in a callback
-                            Log.e("FROM SERVER", message);
+                            @Override
+                            public void onMessage(String message) {
+                                //make new fragment with args, eventually will get done in a callback
+                                Log.e("FROM SERVER", message);
 
-                            Gson gson = new Gson();
-                            Reply reply = gson.fromJson(message, Reply.class);
+                                Gson gson = new Gson();
+                                Reply reply = gson.fromJson(message, Reply.class);
 
-                            Bundle args = new Bundle();
+                                Bundle args = new Bundle();
 
-                            args.putString("question", reply.text);
-                            args.putStringArray("answer_choices", reply.answers);
+                                args.putString("question", reply.text);
+                                args.putStringArray("answer_choices", reply.answers);
 
-                            Fragment qf = new QuestionFragment();
-                            qf.setArguments(args);
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, qf)
-                                    .commit();
+                                Fragment qf = new QuestionFragment();
+                                qf.setArguments(args);
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content_frame, qf)
+                                        .commit();
 
-                        }
+                            }
 
-                        @Override
-                        public void onMessage(byte[] data) {
-                            Log.d(TAG, String.format("Got binary message! %s", data));
-                            // TODO hopefully never?
-                        }
+                            @Override
+                            public void onMessage(byte[] data) {
+                                Log.d(TAG, String.format("Got binary message! %s", data));
+                                // TODO hopefully never?
+                            }
 
-                        @Override
-                        public void onDisconnect(int code, String reason) {
-                            showHome();
-                        }
+                            @Override
+                            public void onDisconnect(int code, String reason) {
+                                showHome();
+                            }
 
-                        @Override
-                        public void onError(Exception error) {
-                            showHome(); // TODO probably not this here
-                        }
+                            @Override
+                            public void onError(Exception error) {
+                                showHome(); // TODO probably not this here
+                            }
 
-                    }, extraHeaders
+                        }, extraHeaders
                 );
 
                 mClient.connect();
