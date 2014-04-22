@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/message_text"
+        android:layout_below="@id/question"
         android:visibility="gone"
         />
 
@@ -33,11 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
-        android:layout_below="@id/message_text" >
+        android:layout_below="@id/question" >
 
         <RadioGroup
             android:id="@+id/choice_group"
-            android:layout_below="@+id/message_text"
+            android:layout_below="@+id/question"
             android:orientation="vertical"
             android:showDividers="middle"
             android:divider="?android:attr/dividerVertical"

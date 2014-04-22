@@ -1,14 +1,17 @@
 package com.android.flamingwookiee;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +34,8 @@ import java.util.List;
 
 public class MainActivity extends Activity implements
         AddClassDialogFragment.AddClassDialogListener,
-        QuestionFragment.OnAnswerSelectedListener {
+        QuestionFragment.OnAnswerSelectedListener,
+        ClassInfoDialogFragment.ClassInfoDialogListener{
 
     public static final String BASE_URL = "ws://24.178.89.28:8080/takeme/";
     static final String TAG = "de.tavendo.autobahn.echo";
@@ -277,6 +281,73 @@ public class MainActivity extends Activity implements
                 Log.e("errors", e.toString());
             }
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+
+        if (v.getId() == R.id.left_drawer) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            mCurrentClass = mClassList.get(info.position);
+            menu.setHeaderTitle(mClassList.get(info.position).getTitle());
+            String[] menuItems = {"Info", "Delete"};
+            for (int i = 0; i < menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex  = item.getItemId();
+        final int classPos = info.position;
+
+        switch (menuItemIndex) {
+            case 0: DialogFragment infoFragment = ClassInfoDialogFragment.newInstance(
+                    mClassList.get(info.position).getTitle(),
+                    mClassList.get(info.position).getClassId(),
+                    mClassList.get(info.position).getStudentId());
+                    infoFragment.show(getFragmentManager(), "info_fragment");
+                    break;
+
+            case 1: AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Delete class?");
+// Add the buttons
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mDrawerAdapter.remove(mClassList.get(classPos).getTitle());
+                        mDrawerAdapter.notifyDataSetChanged();
+                        mDrawerList.invalidate();
+                        ClassList.get(getApplication()).removeClass(mClassList.get(classPos));
+                        ClassList.get(getApplication()).saveClasses();
+
+                        showHome();
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showHome();
+                    }
+                });
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+        }
+        return true;
+    }
+
+    //Class info dialog listener
+    public void onClassInfoDialogPositiveClick(DialogFragment dialog, String newTitle) {
+        mCurrentClass.setTitle(newTitle);
+        ClassList.get(this).saveClasses();
+        //mDrawerAdapter.remove(mCurrentClass.getTitle());
+        mDrawerAdapter.notifyDataSetChanged();
+        mDrawerList.invalidate();
+        showHome();
     }
 
 }
